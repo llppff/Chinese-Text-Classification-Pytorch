@@ -1,12 +1,11 @@
 # Chinese-Text-Classification-Pytorch
-[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 
-中文文本分类，TextCNN，TextRNN，FastText，TextRCNN，BiLSTM_Attention, DPCNN, Transformer, 基于pytorch，开箱即用。
+中文文本分类，BiLSTM_Attention
 
 ## 介绍
-模型介绍、数据流动过程：[我的博客](https://zhuanlan.zhihu.com/p/73176084)  
+双向LSTM+Attention
 
-数据以字为单位输入模型，预训练词向量使用 [搜狗新闻 Word+Character 300d](https://github.com/Embedding/Chinese-Word-Vectors)，[点这里下载](https://pan.baidu.com/s/14k-9jsspp43ZhMxqPmsWMQ)  
+数据以字为单位输入模型，预训练词向量使用 [搜狗新闻 Word+Character 300d]
 
 ## 环境
 python 3.7  
@@ -16,75 +15,32 @@ sklearn
 tensorboardX
 
 ## 中文数据集
-我从[THUCNews](http://thuctc.thunlp.org/)中抽取了20万条新闻标题，已上传至github，文本长度在20到30之间。一共10个类别，每类2万条。
+THUCNews抽取了20万条，一共十个类别，每个类别二万条
 
 类别：财经、房产、股票、教育、科技、社会、时政、体育、游戏、娱乐。
 
-数据集划分：
-
-数据集|数据量
---|--
-训练集|18万
-验证集|1万
-测试集|1万
-
-
-### 更换自己的数据集
- - 如果用字，按照我数据集的格式来格式化你的数据。  
- - 如果用词，提前分好词，词之间用空格隔开，`python run.py --model TextCNN --word True`  
- - 使用预训练词向量：utils.py的main函数可以提取词表对应的预训练词向量。  
-
-
-## 效果
-
-模型|acc|备注
---|--|--
-TextCNN|91.22%|Kim 2014 经典的CNN文本分类
-TextRNN|91.12%|BiLSTM 
-TextRNN_Att|90.90%|BiLSTM+Attention
-TextRCNN|91.54%|BiLSTM+池化
-FastText|92.23%|bow+bigram+trigram， 效果出奇的好
-DPCNN|91.25%|深层金字塔CNN
-Transformer|89.91%|效果较差
-bert|94.83%|bert + fc  
-ERNIE|94.61%|比bert略差(说好的中文碾压bert呢)  
-
-bert和ERNIE模型代码我放到另外一个仓库了，传送门：[Bert-Chinese-Text-Classification-Pytorch](https://github.com/649453932/Bert-Chinese-Text-Classification-Pytorch)，后续还会搞一些bert之后的东西，欢迎star。  
-
+预训练sgns.sogou.char文件数据集下载：https://pan.baidu.com/s/1Km9Pa7LGQJE8RE24ha2Aew  提取码：s0ij
 ## 使用说明
 ```
 # 训练并测试：
-# TextCNN
-python run.py --model TextCNN
+python run.py 
 
-# TextRNN
-python run.py --model TextRNN
+# 模型定义：
+models/TextRNN_Att.py
 
-# TextRNN_Att
-python run.py --model TextRNN_Att
+# 具体训练和测试过程：
+train_eval.py
 
-# TextRCNN
-python run.py --model TextRCNN
+# 词汇表构造，加载训练集、测试集、验证集数据、并分别构造迭代器：
+utils.py
 
-# FastText, embedding层是随机初始化的
-python run.py --model FastText --embedding random 
-
-# DPCNN
-python run.py --model DPCNN
-
-# Transformer
-python run.py --model Transformer
+# 数据存放
+THUCNews/data文件夹下
 ```
 
 ### 参数
-模型都在models目录下，超参定义和模型定义在同一文件中。  
+定义模型的文件在models目录下，超参定义和模型定义在同一文件中。  
 
 
-## 对应论文
-[1] Convolutional Neural Networks for Sentence Classification  
-[2] Recurrent Neural Network for Text Classification with Multi-Task Learning  
-[3] Attention-Based Bidirectional Long Short-Term Memory Networks for Relation Classification  
-[4] Recurrent Convolutional Neural Networks for Text Classification  
-[5] Bag of Tricks for Efficient Text Classification  
-[6] Deep Pyramid Convolutional Neural Networks for Text Categorization  
-[7] Attention Is All You Need  
+## 结果可视化步骤
+将目录切换到THUCNews/log/TextRNN_Att/根据时间命名的文件夹下，在命令行输入tensorboard --logdir + 参数，将返回的网址复制到浏览器中，断开本地网络后即可查看
